@@ -2,9 +2,7 @@
 //
 
 #include "stdafx.h"
-
-#include "stdlib.h"
-#include "GLFW\glfw3.h"
+#include "Renderer.h"
 
 //If an error, print it to stderr
 void error_callback(int error, const char* description)
@@ -21,46 +19,27 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 int main()
 {
-	//init glfw
-	if (!glfwInit())
-	{
-		exit(EXIT_FAILURE);
-	}
+	//Renderer Init////////////////////////
+	
+	Renderer renderer;
+	renderer.Initialize();
+
+	///////////////////////////////////////
 
 	//register what function to use to check errors
 	glfwSetErrorCallback(error_callback);
 
-	//set major and minor versions of gl
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-
-	//create the window pointer
-	GLFWwindow* window = glfwCreateWindow(640, 480, "Test Window", NULL, NULL);
-	if (!window)
-	{
-		glfwTerminate();
-		exit(EXIT_FAILURE);
-	}
-
 	//register function to receive key events
-	glfwSetKeyCallback(window, key_callback);
-
-	//set context
-	glfwMakeContextCurrent(window);
-
-	//set how often it swaps
-	glfwSwapInterval(1);
+	glfwSetKeyCallback(renderer.m_window, key_callback);
 
 	//run until key_callback window should close
-	while (!glfwWindowShouldClose(window))
+	while (!glfwWindowShouldClose(renderer.m_window))
 	{
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(renderer.m_window);
 		glfwPollEvents();
 	}
 
-	glfwDestroyWindow(window);
-
-	glfwTerminate();
+	renderer.ShutDown();
 
     return 0;
 }
